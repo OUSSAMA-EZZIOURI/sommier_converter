@@ -9,12 +9,19 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.nio.charset.MalformedInputException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +29,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -49,19 +57,93 @@ public class SommierPdfConverter extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					SommierPdfConverter frame = new SommierPdfConverter();
-					frame.setVisible(true);
+		String allowedKeys  = getLocalMacAddress();	
+		//System.out.println(allowedKeys);
+		//System.out.println(getMD5Hash(allowedKeys));
+		
+		// Load allowed MAC addresses from address.txt
+        List<String> allowedMacAddresses = loadAllowedMacHashes(get_current_dir() + File.separator + "loc"+ File.separator + "loc.bin");
+		
+		// Check if the local MAC address is allowed
+        if (allowedMacAddresses.contains(getMD5Hash(allowedKeys))) {
+        	System.out.println("Key valid !");
+            EventQueue.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        SommierPdfConverter frame = new SommierPdfConverter();
+                        frame.setVisible(true);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+            System.out.println("Invalid program key!");
+            showInvalidKeyMessage();
+            System.exit(1); // Exit if MAC address is not allowed
+        }
 
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
+	
+    // Method to get the MD5 hash of a given string
+    public static String getMD5Hash(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] hashBytes = md.digest(input.getBytes());
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashBytes) {
+                hexString.append(String.format("%02x", b));
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+	
+	// Show a message dialog when the key is invalid
+    private static void showInvalidKeyMessage() {
+        // Show a message dialog with an error message
+        JOptionPane.showMessageDialog(null, "Invalid program key!", "Error", JOptionPane.ERROR_MESSAGE);
+        System.exit(1);  // Exit the program after showing the message
+    }
+	
+	// Get the MAC address of the local machine
+    private static String getLocalMacAddress() {
+        try {
+            InetAddress ip = InetAddress.getLocalHost();
+            NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+            byte[] mac = network.getHardwareAddress();
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < mac.length; i++) {
+                sb.append(String.format("%02X", mac[i]));
+                if (i != mac.length - 1) {
+                    sb.append("-");
+                }
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    // Load allowed MAC address MD5 hashes from loc.bin file
+    public static List<String> loadAllowedMacHashes(String filePath) {
+        List<String> macHashes = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                macHashes.add(line.trim());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return macHashes;
+    }
 
 	/**
 	 * Create the frame.
