@@ -68,7 +68,7 @@ public class SommierPdfConverter extends JFrame {
 	 */
 	public SommierPdfConverter() {
 		setResizable(false);
-		setTitle("Sommier PDF Converter");
+		setTitle("Sommier PDF Converter (by Oussama EZZIOURI)");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 658, 508);
 		contentPane = new JPanel();
@@ -369,7 +369,7 @@ public class SommierPdfConverter extends JFrame {
 		String outputFolderPath = textField_csv_folder.getText()+  File.separator;
 		String inputFolderPath =  "./txt" ;
 		
-		System.out.println("inputFolderPath "+inputFolderPath);
+		System.out.println("inputFolderPath "+inputFolderPath);//
 
 		// Regex patterns
 		String regex1 = "(\\d{3}\\s+\\d{3}\\s+\\d{4}\\s+\\d{7}\\s+[A-Z])"; // COMPTE
