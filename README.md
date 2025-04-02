@@ -122,7 +122,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-For questions or feedback, feel free to reach out to **Oussama Ezziouri** at [oussama.ezziouri@example.com](mailto:oussama.ezziouri@example.com).
+For questions or feedback, feel free to reach out to **Oussama Ezziouri** at [oussama.ezziouri@example.com](mailto:oussama.ezziouri@gmail.com).
 ```
-
-You can copy and paste the above code into a `README.md` file in the root of your project directory. This markdown file will render with proper formatting on GitHub or any markdown viewer, ensuring clarity and easy understanding of the project structure and instructions.
