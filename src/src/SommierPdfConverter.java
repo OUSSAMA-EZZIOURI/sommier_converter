@@ -60,9 +60,9 @@ public class SommierPdfConverter extends JFrame {
 		String allowedKeys  = getLocalMacAddress();	
 		//System.out.println(allowedKeys);
 		//System.out.println(getMD5Hash(allowedKeys));
-		
+				
 		// Load allowed MAC addresses from address.txt
-        List<String> allowedMacAddresses = loadAllowedMacHashes(get_current_dir() + File.separator + "loc"+ File.separator + "loc.bin");
+        List<String> allowedMacAddresses = loadAllowedMacHashes(System.getProperty("user.dir") + File.separator + "loc"+ File.separator + "loc.bin");
 		
 		// Check if the local MAC address is allowed
         if (allowedMacAddresses.contains(getMD5Hash(allowedKeys))) {
@@ -85,6 +85,7 @@ public class SommierPdfConverter extends JFrame {
         }
 
 	}
+	
 	
     // Method to get the MD5 hash of a given string
     public static String getMD5Hash(String input) {
