@@ -1,5 +1,3 @@
-```markdown
-
 # Sommier Converter
 
 The **Sommier Converter** is a tool designed to convert PDF documents into CSV format. It is ideal for users who need to extract structured data from PDF files and convert it into a CSV format for further analysis, processing, or integration into other systems.
